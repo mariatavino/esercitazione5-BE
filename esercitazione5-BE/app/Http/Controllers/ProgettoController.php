@@ -43,8 +43,8 @@ class ProgettoController extends Controller
     public function store(Request $request)
     {
         $validated = $request->validate([
-            'name' => 'required|max:255',
-            'descrizione' => 'required',
+            'name' => 'required|max:100',
+            'descrizione' => 'required|max:500',
             'stato' => 'required|in:In sospeso,In corso,Completato',
             'data_inizio' => 'required|date',
             'data_fine' => 'required|date|after_or_equal:data_inizio',
@@ -55,7 +55,12 @@ class ProgettoController extends Controller
         $progetto->stato = $validated['stato'];
         $progetto->data_inizio = $validated['data_inizio'];
         $progetto->data_fine = $validated['data_fine'];
-        $progetto->user_id = auth()->id();
+        if (auth()->check()) {
+            $progetto->user_id = auth()->id();
+        } else {
+            return redirect('login');
+        }
+
 
         $progetto->save();
 
@@ -67,20 +72,28 @@ class ProgettoController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show(progetto $progetto)
-    {
-        // Controlla se l'utente corrente può visualizzare il progetto
-        $this->authorize('view', $progetto);
+    public function show($id) {
+        $progetto = Progetto::find($id);
 
-        return view('progetti.show',compact('progetto'));
-        //
+        if ($progetto === null) {
+            return view('progetti.index');
+        }
+
+        return view('progetti.show', ['progetto' => $progetto]);
     }
+
 
     /**
      * Show the form for editing the specified resource.
      */
-    public function edit(progetto $progetto)
+    public function edit($id)
     {
+        $progetto = Progetto::find($id);
+
+        if ($progetto === null) {
+            return view('progetti.index');
+        }
+
         return view('progetti.edit', compact('progetto'));
         //
     }
@@ -88,44 +101,47 @@ class ProgettoController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, progetto $progetto)
-    {
-        // Controlla se l'utente corrente può aggiornare il progetto
-        $this->authorize('update', $progetto);
+    public function update(Request $request, $id)
+{
+    $progetto = Progetto::findOrFail($id);
 
-        $validated = $request->validate([
-            'name' => 'required|max:255',
-            'descrizione' => 'required',
-            'stato' => 'required|in:In sospeso,In corso,Completato',
-            'data_inizio' => 'required|date',
-            'data_fine' => 'required|date|after_or_equal:data_inizio',
-        ]);
+    // Controlla se l'utente corrente può aggiornare il progetto
+    $this->authorize('update', $progetto);
 
-        $progetto->name = $validated['name'];
-        $progetto->descrizione = $validated['descrizione'];
-        $progetto->stato = $validated['stato'];
-        $progetto->data_inizio = $validated['data_inizio'];
-        $progetto->data_fine = $validated['data_fine'];
+    $validated = $request->validate([
+        'name' => 'required|max:255',
+        'descrizione' => 'required',
+        'stato' => 'required|in:In sospeso,In corso,Completato',
+        'data_inizio' => 'required|date',
+        'data_fine' => 'required|date|after_or_equal:data_inizio',
+    ]);
 
-        $progetto->save();
+    $progetto->name = $validated['name'];
+    $progetto->descrizione = $validated['descrizione'];
+    $progetto->stato = $validated['stato'];
+    $progetto->data_inizio = $validated['data_inizio'];
+    $progetto->data_fine = $validated['data_fine'];
 
-        return redirect()->route('progetti.show', $progetto)
-            ->with('success', 'Progetto aggiornato con successo.');
-        //
-    }
+    $progetto->save();
+
+    return redirect()->route('progetti.show', $progetto)
+        ->with('success', 'Progetto aggiornato con successo.');
+}
+
 
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(progetto $progetto)
-    {
-        // Controlla se l'utente corrente può eliminare il progetto
-        $this->authorize('delete', $progetto);
+    public function destroy($id)
+{
+    $progetto = Progetto::findOrFail($id);
 
-        $progetto->delete();
+    // Controlla se l'utente corrente può eliminare il progetto
+    $this->authorize('delete', $progetto);
 
-        return redirect()->route('progetti.index')
+    $progetto->delete();
+
+    return redirect()->route('progetti.index')
         ->with('success', 'Progetto eliminato con successo.');
-        //
-    }
+}
 }

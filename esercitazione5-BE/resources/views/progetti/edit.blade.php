@@ -3,7 +3,7 @@
 @section('content')
     <h1>Modifica Progetto: {{ $progetto->name }}</h1>
 
-    <form action="{{ route('progetti.update', $progetto) }}" method="POST">
+    <form action="{{ route('progetti.update', $progetto->id) }}" method="POST">
         @csrf
         @method('PUT')
 
@@ -29,12 +29,12 @@
 
         <div class="form-group">
             <label for="data_inizio">Data Inizio:</label>
-            <input type="date" id="data_inizio" name="data_inizio" class="form-control" value="{{ $progetto->data_inizio->format('Y-m-d') }}" required>
+            <input type="date" id="data_inizio" name="data_inizio" class="form-control" value="{{ $progetto->data_inizio }}" required>
         </div>
 
         <div class="form-group">
             <label for="data_fine">Data Fine:</label>
-            <input type="date" id="data_fine" name="data_fine" class="form-control" value="{{ $progetto->data_fine ? $progetto->data_fine->format('Y-m-d') : '' }}" required>
+            <input type="date" id="data_fine" name="data_fine" class="form-control" value="{{ $progetto->data_fine}}" required>
         </div>
 
         <button type="submit" class="btn btn-primary">Aggiorna Progetto</button>

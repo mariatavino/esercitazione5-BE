@@ -1,9 +1,9 @@
 @extends('layouts.app')
 
 @section('content')
-    <h1>Crea un nuovo progetto</h1>
+    <h1 class="mb-4">Crea un nuovo progetto</h1>
 
-    <form action="{{ route('progetti.store') }}" method="POST">
+    <form action="{{ route('progetti.store') }}" method="POST" class="form-control bg-dark text-white">
         @csrf
 
         <div class="form-group">
@@ -56,4 +56,11 @@
             {{ session('success') }}
         </div>
     @endif
+    <style>
+        h1{
+            font-size: 1.5rem;
+            font-weight: 900;
+        }
+
+    </style>
 @endsection
