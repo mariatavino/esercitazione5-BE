@@ -73,7 +73,7 @@ class ProgettoController extends Controller
      * Display the specified resource.
      */
     public function show($id) {
-        $progetto = Progetto::find($id);
+        $progetto = Progetto::with('attivitas')->find($id); // Carica le attività
 
         if ($progetto === null) {
             return view('progetti.index');
@@ -81,6 +81,7 @@ class ProgettoController extends Controller
 
         return view('progetti.show', ['progetto' => $progetto]);
     }
+
 
 
     /**

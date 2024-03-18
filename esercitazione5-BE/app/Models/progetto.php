@@ -17,7 +17,7 @@ class Progetto extends Model
         'data_fine',
     ];
 
-    public function attivitàs()
+    public function attivitas()
     {
         return $this->hasMany(Attivita::class);
     }

@@ -1,6 +1,6 @@
 <?php
 
-use App\Http\Controllers\AttivitàController;
+use App\Http\Controllers\AttivitaController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\ProgettoController;
 use Illuminate\Support\Facades\Route;
@@ -31,7 +31,7 @@ Route::middleware('auth')->group(function () {
 
     Route::resource('progetti', ProgettoController::class);
 
-    Route::resource('attività', AttivitàController::class);
+    Route::resource('attivita', AttivitaController::class);
 });
 
 require __DIR__.'/auth.php';
